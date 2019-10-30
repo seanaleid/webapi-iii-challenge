@@ -11,18 +11,24 @@ const postsRouter = require('./posts/postRouter');
 
 const server = express();
 
+
+
 // global middleware
 //custom middleware
 
+// turning on json reading for express
+server.use(express.json());
+
 // setting the routers
 // telling the server to use the users router
-server.use('/api/:id', logger('Logger for users', usersRouter));
+server.use('/api/users', usersRouter);
 
 // telling the server to use the posts router
-server.use('/api/:id', logger('Logger for posts', postsRouter));
+server.use('/api/posts', postsRouter);
 
 
-server.get('/', (req, res) => {
+server.get('/', logger('Logger for main /'), (req, res) => {
+  res.status(200).json({ message: 'test test'});
   res.send(`<h2>Let's write some middleware!</h2>`)
 });
 
