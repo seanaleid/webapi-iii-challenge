@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const userDb = require('./userDb');
+// const postDb = require('../posts/postRouter');
 
 // 1
 router.post('/',  (req, res) => {
@@ -16,17 +17,17 @@ router.post('/',  (req, res) => {
 })
 
 // 2
-router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-    const newPost = req.body
+// router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
 
-    userDb.insert(newPost.user_id)
-        .then(post => {
-            res.status(201).json(post)
-        })
-        .catch(err => {
-            res.status(500).json({message: 'Error adding the post!'})
-        })
-});
+
+//     postDb.insert(req.params.id, req.body)
+//         .then(post => {
+//             res.status(201).json(post)
+//         })
+//         .catch(err => {
+//             res.status(500).json({message: 'Error adding the post!'})
+//         })
+// });
 
 // 3
 router.get('/', (req, res) => {
@@ -74,7 +75,14 @@ router.delete('/:id', validateUserId, (req, res) => {
 
 // 7
 router.put('/:id', validateUserId, (req, res) => {
-
+    userDb.update(req.params.id, req.body)
+        .then(update => {
+            if(update){
+                res.status(200).json(update);
+            } else{
+                res.status(404).json(({ message: "The user could not be updated"}));
+            }
+        })
 });
 
 
