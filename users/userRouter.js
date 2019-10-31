@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const userDb = require('./userDb');
-// const postDb = require('../posts/postRouter');
+const postDb = require('../posts/postDb');
 
 // 1
 router.post('/', validateUser, (req, res) => {
@@ -20,9 +20,10 @@ router.post('/', validateUser, (req, res) => {
 
 // 2
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+    // const id = req.params.id;
+    const post = {...req.body, user_id: req.params.id};
 
-
-    postDb.insert(req.params.id, req.body)
+    postDb.insert(post)
         .then(post => {
             res.status(201).json(post)
         })
