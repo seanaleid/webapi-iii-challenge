@@ -32,7 +32,7 @@ router.get('/:id', validatePostId, (req, res) => {
         })
 });
 
-3
+// 3
 router.delete('/:id', validatePostId, (req, res) => {
     postDb.remove(req.params.id)
     .then(count => {
@@ -42,12 +42,25 @@ router.delete('/:id', validatePostId, (req, res) => {
             res.status(400).json({ message: 'The post could not be found.'})
         }
     })
+    .catch(err => {
+        res.status(500).json({ error: "Couldn't delete post"})
+    })
 });
 
 // 4 
-// router.put('/:id', (req, res) => {
-
-// });
+router.put('/:id', validatePostId, (req, res) => {
+    postDb.update(req.params.id, req.body)
+    .then(update => {
+        if(update){
+            res.status(200).json(update);
+        } else{
+            res.status(404).json(({ message: "The post could not be updated"}));
+        }
+    })
+    .catch(err => {
+        res.status(500).json({ error: "Couldn't update post"})
+    })
+});
 
 // custom middleware
 
