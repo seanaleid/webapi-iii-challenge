@@ -21,8 +21,8 @@ router.get('/:id', validatePostId, (req, res) => {
 
     postDb.getById(req.params.id)
         .then(posts => {
-            if(user){
-                res.status(200).json(user)
+            if(posts){
+                res.status(200).json(posts)
             } else {
                 res.status(404).json({ error: "Couldn't get user by id."})
             }
