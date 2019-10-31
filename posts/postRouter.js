@@ -17,9 +17,20 @@ router.get('/', (req, res) => {
 });
 
 // 2
-// router.get('/:id', validatePostId, (req, res) => {
+router.get('/:id', validatePostId, (req, res) => {
 
-// });
+    postDb.getById(req.params.id)
+        .then(posts => {
+            if(user){
+                res.status(200).json(user)
+            } else {
+                res.status(404).json({ error: "Couldn't get user by id."})
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "There was an error getting the user"})
+        })
+});
 
 // 3
 // router.delete('/:id', (req, res) => {
