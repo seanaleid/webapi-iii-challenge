@@ -6,28 +6,30 @@ const userDb = require('./userDb');
 // const postDb = require('../posts/postRouter');
 
 // 1
-router.post('/',  (req, res) => {
-    userDb.insert(req.body)
+router.post('/', validateUser, (req, res) => {
+    const newUser = req.body
+    
+    userDb.insert(newUser)
         .then(user => {
             res.status(201).json(user)
         })
         .catch(err => {
-            res.status(500).json({message: 'Error adding the user!', err})
-});
+            res.status(500).json({message: 'Error adding the user!'})
+        });
 })
 
 // 2
-// router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
 
 
-//     postDb.insert(req.params.id, req.body)
-//         .then(post => {
-//             res.status(201).json(post)
-//         })
-//         .catch(err => {
-//             res.status(500).json({message: 'Error adding the post!'})
-//         })
-// });
+    postDb.insert(req.params.id, req.body)
+        .then(post => {
+            res.status(201).json(post)
+        })
+        .catch(err => {
+            res.status(500).json({message: 'Error adding the post!'})
+        })
+});
 
 // 3
 router.get('/', (req, res) => {
@@ -58,7 +60,15 @@ router.get('/:id', validateUserId, (req, res) => {
 
 // 5
 router.get('/:id/posts', validateUserId, (req, res) => {
-    
+    const {id} = req.params;
+
+    userDb.getUserPosts(id)
+        .then(getPosts => {
+            res.status(200).json(getPosts)
+        })
+        .catch(err => {
+            res.status(500).json({ error: "Couldn't retrieve posts"})
+        })
 });
 
 // 6
@@ -108,16 +118,17 @@ function validateUserId(req, res, next) {
     )});
 };
 
-// function validateUser(req, res, next) {
-
-//     if(!req.body){
-//         res.status(400).json({ message: 'Missing user data'})
-//     } else if(!req.body.text){
-//         res.status(400).json({ message: "missing required name field" })
-//     } else {
-//         next();
-//     }
-// };
+function validateUser(req, res, next) {
+    const newUser =req.body;
+    
+    if(!newUser){
+        res.status(400).json({ message: 'Missing user data'})
+    } else if(!newUser.name){
+        res.status(400).json({ message: "missing required name field" })
+    } else {
+        next();
+    }
+};
 
 function validatePost(req, res, next) {
     const posts = req.body;
