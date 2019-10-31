@@ -10,12 +10,7 @@ const logger = require('./logger-middleware');
 // importing users router
 const userRouter = require('./users/userRouter');
 
-// importing posts router
-const postsRouter = require('./posts/postRouter');
-
 const server = express();
-
-
 
 // global middleware
 //custom middleware
@@ -33,7 +28,5 @@ server.get('/', logger('Logger for main /'), (req, res) => {
 // telling the server to use the users router
 server.use('/api/users', userRouter);
 
-// telling the server to use the posts router
-server.use('/api/posts', postsRouter);
 
 module.exports = server;
