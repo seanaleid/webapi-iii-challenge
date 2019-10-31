@@ -24,18 +24,25 @@ router.get('/:id', validatePostId, (req, res) => {
             if(posts){
                 res.status(200).json(posts)
             } else {
-                res.status(404).json({ error: "Couldn't get user by id."})
+                res.status(404).json({ error: "Couldn't get post by id."})
             }
         })
         .catch(err => {
-            res.status(500).json({ errorMessage: "There was an error getting the user"})
+            res.status(500).json({ errorMessage: "There was an error getting the post"})
         })
 });
 
-// 3
-// router.delete('/:id', (req, res) => {
-
-// });
+3
+router.delete('/:id', validatePostId, (req, res) => {
+    postDb.remove(req.params.id)
+    .then(count => {
+        if(count > 0){
+            res.status(200).json({ message: 'The post has been removed.'})
+        } else {
+            res.status(400).json({ message: 'The post could not be found.'})
+        }
+    })
+});
 
 // 4 
 // router.put('/:id', (req, res) => {
